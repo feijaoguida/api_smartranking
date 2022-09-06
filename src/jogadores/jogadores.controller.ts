@@ -15,6 +15,7 @@ import {
 } from '@nestjs/common';
 import { CriarJogadorDto } from './dtos/criar-jogador.dto';
 import { JogadoresValidacaoParametrosPipe } from './pipes/jogadores-validacao-parametros.pipe';
+import { AtualizarJogadorDto } from './dtos/atualizar-jogador.dto';
 
 @Controller('api/v1/jogadores')
 export class JogadoresController {
@@ -22,17 +23,17 @@ export class JogadoresController {
 
   @Post()
   @UsePipes(ValidationPipe)
-  async criarJogador(@Body() criaJogadorDto: CriarJogadorDto) {
-    await this.jogadoresService.criarJogador(criaJogadorDto);
+  async criarJogador(@Body() criaJogadorDto: CriarJogadorDto): Promise<Jogador> {
+    return await this.jogadoresService.criarJogador(criaJogadorDto);
   }
 
   @Put('/:_id')
   @UsePipes(ValidationPipe)
   async atualizarJogador(
-    @Body() criaJogadorDto: CriarJogadorDto,
+    @Body() atualizarJogadorDto: AtualizarJogadorDto,
     @Param('_id', JogadoresValidacaoParametrosPipe) _id: string
   ): Promise<void> {
-    await this.jogadoresService.atualizarJogador(_id, criaJogadorDto);
+    await this.jogadoresService.atualizarJogador(_id, atualizarJogadorDto);
   }
 
   @Get()
@@ -42,12 +43,12 @@ export class JogadoresController {
 
   @Get('/:_id')
   async consultarJogadorPeloID(
-    @Param('_id', JogadoresValidacaoParametrosPipe) '_id': string,
+    @Param('_id', JogadoresValidacaoParametrosPipe) _id: string,
   ): Promise<Jogador> {
-      return this.jogadoresService.consultarJogadoresPeloID(_id); 
+      return this.jogadoresService.consultarJogadoresPeloId(_id); 
   }
 
-  @Delete('/:id')
+  @Delete('/:_id')
   async removerJogador(
     @Param('_id', JogadoresValidacaoParametrosPipe) _id: string,
   ): Promise<void | NotFoundException> {
